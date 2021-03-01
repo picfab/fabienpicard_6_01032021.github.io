@@ -1,0 +1,116 @@
+@import './utils/fontAwsome';
+/**
+* Modification Bootstrap
+*/
+:root {
+    --primary: #3282F7;
+    --danger: #ED6454;
+    --success: #68D9A4;
+}
+@media (min-width: 1200px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1240px;
+    }
+}
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/**
+* cards
+*/
+.card-deck .card {
+    flex: none;
+    width: calc(100% / 3 - 15px * 2);
+}
+.card{
+    border-radius: 5px;
+    font-size: 12px;
+    ul{list-style: none;}
+    &__title{
+        font-family: Lato;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+    }
+    .card-body{
+        background: #f7f7f7;
+    }
+    .card-img-top{
+        background:#C7BEBE
+    }
+}
+
+/**
+* Search
+*/
+.search{
+    position: relative;
+    &__icon{
+        position: absolute;
+        top:0;
+        right: 0;
+    }
+}
+/**
+* Filters
+*/
+.filters{
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 82px;
+}
+.filter{
+    position: relative;
+    border-radius: 5px;
+    padding: 5px;
+
+    &__list{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    &__form{
+        display: flex;
+    }
+    &__input{
+        flex:1;
+        background: var(--primary);
+        border: none;
+        color: #fff;
+        &::-webkit-input-placeholder{
+            color: #fff;
+        }
+        &::-moz-placeholder{
+            color: #fff;
+        }
+        &:-ms-input-placeholder{
+            color: #fff;
+        }
+        &::-ms-input-placeholder{
+            color: #fff;
+        }
+        &::placeholder{
+            color: #fff;
+        }
+    }
+    &__list{
+        position: absolute;
+        z-index: 1;
+        padding: 5px;
+        background: var(--primary);
+        width: 100%;
+        margin-left: -5px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    &__elt{
+        width: calc(100%/3);
+    }
+}
