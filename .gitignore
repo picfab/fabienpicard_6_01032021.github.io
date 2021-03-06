@@ -1,0 +1,4 @@
+# Les ligne commençant par '#' sont des commentaires.
+.vscode/
+.eslintrc.js
+node_modules/
