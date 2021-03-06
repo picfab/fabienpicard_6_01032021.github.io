@@ -1,6 +1,6 @@
 export default function FilterBtn(name, color = 'primary') {
     const button = document.createElement('button')
-    button.classList.add('filter', `bg-${color}`, 'text-white')
+    button.classList.add('filter', `btn-${color}`, 'btn')
     button.role = 'button'
     button.ariaHaspopup = 'true'
     button.ariaExpanded = 'false'

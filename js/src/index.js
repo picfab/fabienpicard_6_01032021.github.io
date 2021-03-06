@@ -1,6 +1,6 @@
 import recipes from './data/recipes'
 import FactoryFilter from './Factories/FactoryFilter'
-console.log(recipes)
+
 const factFilter = new FactoryFilter()
 const eltFilters = document.getElementById('filters')
 const ingredients = []
@@ -25,12 +25,24 @@ recipes.forEach((x) => {
             appareils.push(name)
         }
     }
-
 })
-const ingrediantsFilter = factFilter.CreateElement('Ingrédients', ingredients, 'Recherche un ingrédient')
-const appareilsFilter = factFilter.CreateElement('Appareil', appareils, 'Recherche un ustensils', 'success')
-const ustensilsFilter = factFilter.CreateElement('Ustensiles', ustensils, 'Recherche un ustensiles', 'danger')
-console.log(appareils)
+const ingrediantsFilter = factFilter.CreateElement(
+    'Ingrédients',
+    ingredients,
+    'Recherche un ingrédient'
+)
+const appareilsFilter = factFilter.CreateElement(
+    'Appareil',
+    appareils,
+    'Recherche un appareil',
+    'success'
+)
+const ustensilsFilter = factFilter.CreateElement(
+    'Ustensiles',
+    ustensils,
+    'Recherche un ustensile',
+    'danger'
+)
 
 eltFilters.append(ingrediantsFilter.button)
 eltFilters.append(appareilsFilter.button)
