@@ -1,113 +1,46 @@
-/* eslint-disable no-use-before-define */
+/**
+ * importation des recettes
+ */
 import recipes from './data/recipes'
+/**
+ * Importation des données de l'application
+ */
+import dataApp from './assets/dataApp'
+/**
+ * importation des functions
+ */
+import {
+    showRecettes,
+    updateRecettes,
+    changeTags,
+    pushOptionsToList,
+    updateListsOptions,
+} from './assets/functions'
+/**
+ * importation des factory
+ */
 import FactoryFilter from './Factories/FactoryFilter'
 import FactoryRecette from './Factories/FactoryRecette'
 
+/**
+ * instenciation des factory
+ */
 const factFilter = new FactoryFilter()
 const factRecette = new FactoryRecette()
+/**
+ * Récupération des éléments du DOM
+ */
 const eltFilters = document.getElementById('filters')
-const dataApp = {
-    ingredients: [],
-    ustensils: [],
-    appareils: [],
-    recettes: [],
-    ingredientsSelected: [],
-    ustensilsSelected: [],
-    appareilsSelected: [],
-}
+const searchInput = document.getElementById('search')
 
-const showRecettes = () => {
-    const content = document.querySelector('.listcards')
-    content.innerHTML = ''
-    dataApp.recettes.forEach((x) => {
-        if (authorize(x)) {
-            content.append(x.html)
-        }
-    })
-}
-
-const verifIngredients = (values) => {
-    dataApp.recettes.forEach((rec, i) => {
-        let verif = true
-        values.forEach((val) => {
-            if (rec.ingredients.findIndex((x) => x.ingredient === val) === -1) {
-                verif = false
-            }
-        })
-        dataApp.recettes[i].ingredientShow = verif
-    })
-}
-
-const verifUnstensils = (values) => {
-    dataApp.recettes.forEach((rec, i) => {
-        let verif = true
-        values.forEach((val) => {
-            if (rec.ustensils.findIndex((x) => x === val) === -1) {
-                verif = false
-            }
-        })
-        dataApp.recettes[i].ustensileShow = verif
-    })
-}
-
-const verifAppareils = (values) => {
-    dataApp.recettes.forEach((rec, i) => {
-        let verif = true
-        values.forEach((val) => {
-            if (val !== rec.appliance) {
-                verif = false
-            }
-        })
-        dataApp.recettes[i].appareilShow = verif
-    })
-}
-
-const updateRecettes = () => {
-    verifIngredients(dataApp.ingredientsSelected)
-    verifUnstensils(dataApp.ustensilsSelected)
-    verifAppareils(dataApp.appareilsSelected)
-}
-
-const changeTags = (type, search, show) => {
-    if (show) {
-        type.push(search)
-    } else {
-        const i = type.findIndex((x) => x.includes(search))
-        type.splice(i, 1)
-    }
-}
-
-const updateListsOptions = () => {
-    dataApp.ingredients = []
-    dataApp.ustensils = []
-    dataApp.appareils = []
-    dataApp.recettes.forEach((x) => {
-        if (authorize(x)) {
-            x.ingredients.forEach((elt) => {
-                pushOptionsToList('ingredients', elt.ingredient)
-            })
-        }
-        if (authorize(x)) {
-            x.ustensils.forEach((elt) => {
-                pushOptionsToList('ustensils', elt)
-            })
-        }
-        if (authorize(x)) {
-            if (x.appliance) {
-                pushOptionsToList('appareils', x.appliance)
-            }
-        }
-    })
-}
-
-const pushOptionsToList = (type, val) => {
-    const selectedName = `${type}Selected`
-    if (!dataApp[type].includes(val) && dataApp[selectedName].findIndex(x => x === val) === -1) {
-        dataApp[type].push(val)
-    }
-}
-
-//INIT
+/**
+ * function à importer dans le constructeur
+ * lors de la création d'un bouton de filtre afin de traiter
+ * l'ajout et la suppression de tags
+ * @param {String} type nom du filtre
+ * @param {String} search nom du tag
+ * @param {Boolean} show ajout de tag ou suppression
+ */
 function updateAfterChangeTag(type, search, show) {
     switch (type) {
         case 'Ingrédients':
@@ -122,73 +55,83 @@ function updateAfterChangeTag(type, search, show) {
         default:
             break
     }
-    updateRecettes()
-    showRecettes()
-
-    updateListsOptions()
-    ingredientsFilter.updateShowBtn(dataApp.ingredients)
-    appareilsFilter.updateShowBtn(dataApp.appareils)
-    ustensilesFilter.updateShowBtn(dataApp.ustensils)
+    updateRecettes(dataApp)
+    dataApp.ingredients = []
+    dataApp.ustensils = []
+    dataApp.appareils = []
+    updateListsOptions(dataApp)
+    dataApp.ingredientsFilter.updateShowBtn(dataApp.ingredients)
+    dataApp.appareilsFilter.updateShowBtn(dataApp.appareils)
+    dataApp.ustensilesFilter.updateShowBtn(dataApp.ustensils)
 }
 
+/**
+ * Création du tableau de recettes dans l'appData
+ */
 recipes.forEach((x) => {
     dataApp.recettes.push(factRecette.CreateElement(x))
 })
 
+/**
+ * création des listes d'options pour les boutons de filtre
+ */
 dataApp.recettes.forEach((x) => {
     if (x.ingredientShow) {
         x.ingredients.forEach((elt) => {
-            pushOptionsToList('ingredients', elt.ingredient)
+            pushOptionsToList('ingredients', elt.ingredient, dataApp)
         })
     }
     if (x.ustensileShow) {
         x.ustensils.forEach((elt) => {
-            pushOptionsToList('ustensils', elt)
+            pushOptionsToList('ustensils', elt, dataApp)
         })
     }
     if (x.appareilShow) {
         if (x.appliance) {
-            pushOptionsToList('appareils', x.appliance)
+            pushOptionsToList('appareils', x.appliance, dataApp)
         }
     }
 })
 
-const ingredientsFilter = factFilter.CreateElement(
+/**
+ * création des boutons de filtre
+ */
+dataApp.ingredientsFilter = factFilter.CreateElement(
     'Ingrédients',
     dataApp.ingredients,
     'Recherche un ingrédient',
     'primary',
     updateAfterChangeTag
 )
-const appareilsFilter = factFilter.CreateElement(
+dataApp.appareilsFilter = factFilter.CreateElement(
     'Appareil',
     dataApp.appareils,
     'Recherche un appareil',
     'success',
     updateAfterChangeTag
 )
-const ustensilesFilter = factFilter.CreateElement(
+dataApp.ustensilesFilter = factFilter.CreateElement(
     'Ustensiles',
     dataApp.ustensils,
     'Recherche un ustensile',
     'danger',
     updateAfterChangeTag
 )
+eltFilters.append(dataApp.ingredientsFilter.button)
+eltFilters.append(dataApp.appareilsFilter.button)
+eltFilters.append(dataApp.ustensilesFilter.button)
 
-eltFilters.append(ingredientsFilter.button)
-eltFilters.append(appareilsFilter.button)
-eltFilters.append(ustensilesFilter.button)
-
-const authorize = ({
-    appareilShow,
-    ingredientShow,
-    ustensileShow,
-    searchShow,
-}) => {
-    if (appareilShow && ingredientShow && ustensileShow && searchShow) {
-        return true
-    }
-    return false
+/**
+ * Écouteur sur le champs de recherche
+ * @param {Object} e
+ */
+searchInput.oninput = (e) => {
+    const { value } = e.target
+    dataApp.search = value
+    updateRecettes(dataApp)
 }
 
-showRecettes()
+/**
+ * Affichage des recettes
+ */
+showRecettes(dataApp)

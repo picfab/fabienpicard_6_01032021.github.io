@@ -40,9 +40,13 @@ export default function FactoryFilter() {
          * @param {number} index
          */
         element.addTag = (index) => {
-            const tagBtn = document.createElement('span')
+            const tagBtn = document.createElement('button')
             tagBtn.setAttribute('data-type', name)
             tagBtn.textContent = element.tags[index].name
+            tagBtn.classList.add('btn', `btn-${color}`)
+            const tagIcon = document.createElement('span')
+            tagIcon.classList.add('far', 'fa-times-circle')
+            tagBtn.append(tagIcon)
             tagBtn.onclick = () => {
                 tagBtn.remove()
                 element.tags[index].show = true
@@ -135,7 +139,9 @@ export default function FactoryFilter() {
         // Recherche dans l'input
         element.input.oninput = (e) => {
             element.tags.forEach((x) => {
-                if (x.name.toLowerCase().includes(e.target.value.toLowerCase())) {
+                if (
+                    x.name.toLowerCase().includes(e.target.value.toLowerCase())
+                ) {
                     x.show = true
                 } else {
                     x.show = false

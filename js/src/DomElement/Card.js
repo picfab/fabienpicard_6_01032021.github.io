@@ -1,19 +1,26 @@
 function ellipsis(text, max = 200) {
     return text.substr(0, max - 1) + (text.length > max ? '…' : '')
 }
+
 export default function Card(recette) {
     const col = document.createElement('div')
     col.classList.add('col', 'mb-4')
 
     const card = document.createElement('div')
-    card.classList.add('card')
+    card.classList.add('card', 'h-100')
     col.append(card)
+
+    const imgBox = document.createElement('div')
+    imgBox.classList.add('card-img-top')
+    card.append(imgBox)
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     svg.setAttribute('viewBox', '0 0 380 178')
-    svg.classList.add('card-img-top')
-    // svg.viewBox = '0 0 380 178'
-    card.append(svg)
+    imgBox.append(svg)
+
+    const img = document.createElement('img')
+    img.src = `./img/${recette.id}.jpg`
+    imgBox.append(img)
 
     const container = document.createElement('div')
     container.classList.add('card-body', 'container')
@@ -75,8 +82,6 @@ export default function Card(recette) {
     descriptionContent.textContent = ellipsis(recette.description)
     description.append(descriptionContent)
     row.append(description)
-
-    // console.log(card)
 
     return col
 }

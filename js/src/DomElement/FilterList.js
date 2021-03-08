@@ -1,4 +1,3 @@
-
 export default function FilterList(label, color = 'primary') {
     const listContent = document.createElement('div')
     listContent.classList.add('filter', `bg-${color}`, 'text-white')
