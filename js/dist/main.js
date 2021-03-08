@@ -86,6 +86,18 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/DomElement/Card.js":
+/*!********************************!*\
+  !*** ./src/DomElement/Card.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Card; });\nfunction ellipsis(text, max = 200) {\n  return text.substr(0, max - 1) + (text.length > max ? '…;' : '');\n}\n\nfunction Card(recette) {\n  const col = document.createElement('div');\n  col.classList.add('col', 'mb-4');\n  const card = document.createElement('div');\n  card.classList.add('card');\n  col.append(card);\n  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');\n  svg.setAttribute('viewBox', '0 0 380 178');\n  svg.classList.add('card-img-top'); // svg.viewBox = '0 0 380 178'\n\n  card.append(svg);\n  const container = document.createElement('div');\n  container.classList.add('card-body', 'container');\n  card.append(container);\n  const row = document.createElement('div');\n  row.classList.add('row');\n  container.append(row);\n  const cardTitle = document.createElement('div');\n  cardTitle.classList.add('card-title', 'col-12', 'd-flex', 'justify-content-between', 'p-0');\n  row.append(cardTitle);\n  const title = document.createElement('h2');\n  title.classList.add('card__title');\n  title.textContent = recette.name;\n  cardTitle.append(title);\n  const time = document.createElement('div');\n  time.classList.add('card__time');\n  title.after(time);\n  const iconTime = document.createElement('span');\n  iconTime.classList.add('far', 'fa-clock');\n  time.append(iconTime);\n  iconTime.after(recette.time);\n  const info = document.createElement('ul');\n  info.classList.add('card__info', 'col-md-6', 'p-0');\n  row.append(info);\n  recette.ingredients.forEach(({\n    ingredient,\n    quantity,\n    unit\n  }) => {\n    const ingredientDiv = document.createElement('li');\n    ingredientDiv.classList.add('card__infoElt');\n    const name = document.createElement('strong');\n    const nameValue = ingredient + (quantity ? ' : ' : '');\n    name.textContent = nameValue;\n    ingredientDiv.append(name);\n\n    if (quantity) {\n      ingredientDiv.append(quantity);\n    }\n\n    if (unit) {\n      ingredientDiv.append(unit);\n    }\n\n    info.append(ingredientDiv);\n  });\n  const description = document.createElement('div');\n  description.classList.add('card__description', 'col-md-6', 'p-0');\n  const descriptionContent = document.createElement('p');\n  descriptionContent.textContent = ellipsis(recette.description);\n  description.append(descriptionContent);\n  row.append(description); // console.log(card)\n\n  return col;\n}\n\n//# sourceURL=webpack:///./src/DomElement/Card.js?");
+
+/***/ }),
+
 /***/ "./src/DomElement/FilterBtn.js":
 /*!*************************************!*\
   !*** ./src/DomElement/FilterBtn.js ***!
@@ -134,6 +146,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./src/Factories/FactoryRecette.js":
+/*!*****************************************!*\
+  !*** ./src/Factories/FactoryRecette.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return FactoryRecette; });\n/* harmony import */ var _DomElement_Card__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../DomElement/Card */ \"./src/DomElement/Card.js\");\n\nfunction FactoryRecette() {\n  this.CreateElement = recette => {\n    const element = {\n      appareilsFilter: true,\n      ingrediantsFilter: true,\n      ustensilsFilter: true,\n      searchFilter: true\n    };\n    element.html = new _DomElement_Card__WEBPACK_IMPORTED_MODULE_0__[\"default\"](recette);\n    return element;\n  };\n}\n\n//# sourceURL=webpack:///./src/Factories/FactoryRecette.js?");
+
+/***/ }),
+
 /***/ "./src/data/recipes.js":
 /*!*****************************!*\
   !*** ./src/data/recipes.js ***!
@@ -154,7 +178,7 @@ eval("__webpack_require__.r(__webpack_exports__);\nconst recipes = [{\n  \"id\":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _data_recipes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data/recipes */ \"./src/data/recipes.js\");\n/* harmony import */ var _Factories_FactoryFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Factories/FactoryFilter */ \"./src/Factories/FactoryFilter.js\");\n\n\nconst factFilter = new _Factories_FactoryFilter__WEBPACK_IMPORTED_MODULE_1__[\"default\"]();\nconst eltFilters = document.getElementById('filters');\nconst ingredients = [];\nconst ustensils = [];\nconst appareils = [];\n_data_recipes__WEBPACK_IMPORTED_MODULE_0__[\"default\"].forEach(x => {\n  x.ingredients.forEach(elt => {\n    const name = elt.ingredient.toLowerCase();\n\n    if (!ingredients.includes(name)) {\n      ingredients.push(name);\n    }\n  });\n  x.ustensils.forEach(elt => {\n    const name = elt.toLowerCase();\n\n    if (!ustensils.includes(name)) {\n      ustensils.push(name);\n    }\n  });\n\n  if (x.appliance) {\n    const name = x.appliance.toLowerCase();\n\n    if (!appareils.includes(name)) {\n      appareils.push(name);\n    }\n  }\n});\nconst ingrediantsFilter = factFilter.CreateElement('Ingrédients', ingredients, 'Recherche un ingrédient');\nconst appareilsFilter = factFilter.CreateElement('Appareil', appareils, 'Recherche un appareil', 'success');\nconst ustensilsFilter = factFilter.CreateElement('Ustensiles', ustensils, 'Recherche un ustensile', 'danger');\neltFilters.append(ingrediantsFilter.button);\neltFilters.append(appareilsFilter.button);\neltFilters.append(ustensilsFilter.button);\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _data_recipes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data/recipes */ \"./src/data/recipes.js\");\n/* harmony import */ var _Factories_FactoryFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Factories/FactoryFilter */ \"./src/Factories/FactoryFilter.js\");\n/* harmony import */ var _Factories_FactoryRecette__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Factories/FactoryRecette */ \"./src/Factories/FactoryRecette.js\");\n\n\n\nconst factFilter = new _Factories_FactoryFilter__WEBPACK_IMPORTED_MODULE_1__[\"default\"]();\nconst factRecette = new _Factories_FactoryRecette__WEBPACK_IMPORTED_MODULE_2__[\"default\"]();\nconst eltFilters = document.getElementById('filters');\nconst ingredients = [];\nconst ustensils = [];\nconst appareils = [];\nconst recettes = [];\n_data_recipes__WEBPACK_IMPORTED_MODULE_0__[\"default\"].forEach(x => {\n  recettes.push(factRecette.CreateElement(x));\n  x.ingredients.forEach(elt => {\n    const name = elt.ingredient.toLowerCase();\n\n    if (!ingredients.includes(name)) {\n      ingredients.push(name);\n    }\n  });\n  x.ustensils.forEach(elt => {\n    const name = elt.toLowerCase();\n\n    if (!ustensils.includes(name)) {\n      ustensils.push(name);\n    }\n  });\n\n  if (x.appliance) {\n    const name = x.appliance.toLowerCase();\n\n    if (!appareils.includes(name)) {\n      appareils.push(name);\n    }\n  }\n});\nconst ingrediantsFilter = factFilter.CreateElement('Ingrédients', ingredients, 'Recherche un ingrédient');\nconst appareilsFilter = factFilter.CreateElement('Appareil', appareils, 'Recherche un appareil', 'success');\nconst ustensilsFilter = factFilter.CreateElement('Ustensiles', ustensils, 'Recherche un ustensile', 'danger');\neltFilters.append(ingrediantsFilter.button);\neltFilters.append(appareilsFilter.button);\neltFilters.append(ustensilsFilter.button);\n\nconst showRecettes = () => {\n  const content = document.querySelector('.listcards');\n  recettes.forEach(x => {\n    content.append(x.html);\n  });\n};\n\nshowRecettes();\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 

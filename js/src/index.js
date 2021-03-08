@@ -1,12 +1,16 @@
 import recipes from './data/recipes'
 import FactoryFilter from './Factories/FactoryFilter'
+import FactoryRecette from './Factories/FactoryRecette'
 
 const factFilter = new FactoryFilter()
+const factRecette = new FactoryRecette()
 const eltFilters = document.getElementById('filters')
 const ingredients = []
 const ustensils = []
 const appareils = []
+const recettes = []
 recipes.forEach((x) => {
+    recettes.push(factRecette.CreateElement(x))
     x.ingredients.forEach((elt) => {
         const name = elt.ingredient.toLowerCase()
         if (!ingredients.includes(name)) {
@@ -47,3 +51,11 @@ const ustensilsFilter = factFilter.CreateElement(
 eltFilters.append(ingrediantsFilter.button)
 eltFilters.append(appareilsFilter.button)
 eltFilters.append(ustensilsFilter.button)
+
+const showRecettes = () => {
+    const content = document.querySelector('.listcards')
+    recettes.forEach(x => {
+        content.append(x.html)
+    })
+}
+showRecettes()
