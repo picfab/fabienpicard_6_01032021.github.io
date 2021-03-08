@@ -5,7 +5,13 @@ import Filters from '../DomElement/Filters'
 
 const tagsSelect = document.querySelector('.tags')
 export default function FactoryFilter() {
-    this.CreateElement = (name, tagsList, label, color = 'primary') => {
+    this.CreateElement = (
+        name,
+        tagsList,
+        label,
+        color,
+        updateAfterChangeTag
+    ) => {
         const filterList = new FilterList(label, color)
         const element = {
             tags: [],
@@ -34,9 +40,19 @@ export default function FactoryFilter() {
          * @param {number} index
          */
         element.addTag = (index) => {
-            tagsSelect.append(element.tags[index].name)
+            const tagBtn = document.createElement('span')
+            tagBtn.setAttribute('data-type', name)
+            tagBtn.textContent = element.tags[index].name
+            tagBtn.onclick = () => {
+                tagBtn.remove()
+                element.tags[index].show = true
+                element.showTags()
+                updateAfterChangeTag(name, element.tags[index].name, false)
+            }
+            tagsSelect.append(tagBtn)
             element.tags[index].show = false
             element.showTags()
+            updateAfterChangeTag(name, element.tags[index].name, true)
             return element.tags[index].name
         }
 
@@ -91,6 +107,20 @@ export default function FactoryFilter() {
             })
         }
 
+        element.updateShowBtn = (list) => {
+            // console.log(name, 'updateShowBtn')
+            element.tags.forEach((tag) => {
+                // console.log(tag.name, list)
+                if (list.indexOf(tag.name) === -1) {
+                    tag.show = false
+                } else {
+                    tag.show = true
+                }
+            })
+
+            element.showTags()
+        }
+
         /**
          * Events
          */
@@ -105,7 +135,7 @@ export default function FactoryFilter() {
         // Recherche dans l'input
         element.input.oninput = (e) => {
             element.tags.forEach((x) => {
-                if (x.name.includes(e.target.value)) {
+                if (x.name.toLowerCase().includes(e.target.value.toLowerCase())) {
                     x.show = true
                 } else {
                     x.show = false

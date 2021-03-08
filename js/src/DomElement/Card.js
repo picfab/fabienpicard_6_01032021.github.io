@@ -1,5 +1,5 @@
 function ellipsis(text, max = 200) {
-    return text.substr(0, max - 1) + (text.length > max ? '…;' : '')
+    return text.substr(0, max - 1) + (text.length > max ? '…' : '')
 }
 export default function Card(recette) {
     const col = document.createElement('div')
@@ -14,7 +14,6 @@ export default function Card(recette) {
     svg.classList.add('card-img-top')
     // svg.viewBox = '0 0 380 178'
     card.append(svg)
-
 
     const container = document.createElement('div')
     container.classList.add('card-body', 'container')
@@ -46,7 +45,7 @@ export default function Card(recette) {
     const iconTime = document.createElement('span')
     iconTime.classList.add('far', 'fa-clock')
     time.append(iconTime)
-    iconTime.after(recette.time)
+    iconTime.after(`${recette.time} min`)
 
     const info = document.createElement('ul')
     info.classList.add('card__info', 'col-md-6', 'p-0')
@@ -65,7 +64,7 @@ export default function Card(recette) {
             ingredientDiv.append(quantity)
         }
         if (unit) {
-            ingredientDiv.append(unit)
+            ingredientDiv.append(` ${unit}`)
         }
         info.append(ingredientDiv)
     })
