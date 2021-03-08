@@ -20,6 +20,7 @@ export default function FactoryFilter() {
             listContent: filterList.getElementsByClassName('filter__list')[0],
             input: filterList.getElementsByClassName('filter__input')[0],
         }
+
         /**
          * initialise les tags
          * @param {array} tags
