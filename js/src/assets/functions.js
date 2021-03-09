@@ -1,15 +1,16 @@
+import dataApp from './dataApp'
 /**
  * Affiche ou non une recette
  * @param {Oject} param0 une recette provenant de dataApp.recettes
  * @returns {Boolean} True pour afficher une recette
  */
 const authorize = ({
-    appareilShow,
-    ingredientShow,
-    ustensileShow,
-    searchShow,
+    showAppareil,
+    showIngredient,
+    showUstensil,
+    showSearch,
 }) => {
-    if (appareilShow && ingredientShow && ustensileShow && searchShow) {
+    if (showAppareil && showIngredient && showUstensil && showSearch) {
         return true
     }
     return false
@@ -17,9 +18,8 @@ const authorize = ({
 
 /**
  * Affiche les recettes dans le Dom
- * @param {Object} dataApp les données de l'app
  */
-const showRecettes = (dataApp) => {
+const showRecettes = () => {
     const content = document.querySelector('.listcards')
     content.innerHTML = ''
     dataApp.recettes.forEach((x) => {
@@ -31,9 +31,8 @@ const showRecettes = (dataApp) => {
 
 /**
  * Vérifie les recette à afficher en fonction des tags ingredients
- * @param {Object} dataApp les données de l'app
  */
-const verifIngredients = (dataApp) => {
+const verifIngredients = () => {
     const { recettes, ingredientsSelected } = dataApp
     recettes.forEach((rec, i) => {
         let verif = true
@@ -42,15 +41,14 @@ const verifIngredients = (dataApp) => {
                 verif = false
             }
         })
-        recettes[i].ingredientShow = verif
+        recettes[i].showIngredient = verif
     })
 }
 
 /**
  * Vérifie les recette à afficher en fonction des tags ustensiles
- * @param {Object} dataApp les données de l'app
  */
-const verifUnstensils = (dataApp) => {
+const verifUnstensils = () => {
     const { recettes, ustensilsSelected } = dataApp
     recettes.forEach((rec, i) => {
         let verif = true
@@ -59,15 +57,14 @@ const verifUnstensils = (dataApp) => {
                 verif = false
             }
         })
-        recettes[i].ustensileShow = verif
+        recettes[i].showUstensil = verif
     })
 }
 
 /**
  * Vérifie les recette à afficher en fonction des tags appareils
- * @param {Object} dataApp les données de l'app
  */
-const verifAppareils = (dataApp) => {
+const verifAppareils = () => {
     const { recettes, appareilsSelected } = dataApp
     recettes.forEach((rec, i) => {
         let verif = true
@@ -76,15 +73,14 @@ const verifAppareils = (dataApp) => {
                 verif = false
             }
         })
-        recettes[i].appareilShow = verif
+        recettes[i].showAppareil = verif
     })
 }
 
 /**
- * Vérifie les recette à afficher en fonction du champ recherche
- * @param {Object} dataApp les données de l'app
+ * Vérifie les recettes à afficher en fonction du champ recherche
  */
-const verifSearch = (dataApp) => {
+const verifSearch = () => {
     const { recettes, search } = dataApp
     recettes.forEach((rec, i) => {
         let verif = false
@@ -103,20 +99,19 @@ const verifSearch = (dataApp) => {
                 verif = true
             }
         })
-        recettes[i].searchShow = verif
+        recettes[i].showSearch = verif
     })
 }
 
 /**
  * Mets à jours l'application
- * @param {Object} dataApp les données de l'app
  */
-const updateRecettes = (dataApp) => {
-    verifIngredients(dataApp)
-    verifUnstensils(dataApp)
-    verifAppareils(dataApp)
-    verifSearch(dataApp)
-    showRecettes(dataApp)
+const updateRecettes = () => {
+    verifIngredients()
+    verifUnstensils()
+    verifAppareils()
+    verifSearch()
+    showRecettes()
 }
 
 /**
@@ -135,12 +130,11 @@ const changeTags = (selected, tagName, show) => {
 }
 
 /**
- * Ajoute l'option dans la liste d'option accessible à l'utilisateur
+ * Ajoute l'option dans la liste d'options accessible à l'utilisateur
  * @param {String} type le nom du type de filtre
  * @param {String} val le nom du tag
- * @param {Object} dataApp les données de l'app
  */
-const pushOptionsToList = (type, val, dataApp) => {
+const pushOptionsToList = (type, val) => {
     const selectedName = `${type}Selected`
     if (
         // S'il n'est pas déjà inclus dans la liste
@@ -155,29 +149,123 @@ const pushOptionsToList = (type, val, dataApp) => {
 
 /**
  * mettre à jour la liste des options des filtre
- * @param {Object} dataApp les données de l'app
  */
-const updateListsOptions = (dataApp) => {
+const updateListsOptions = () => {
     const { recettes } = dataApp
     recettes.forEach((x) => {
         if (authorize(x)) {
             x.ingredients.forEach((elt) => {
-                pushOptionsToList('ingredients', elt.ingredient, dataApp)
+                pushOptionsToList('ingredients', elt.ingredient)
             })
         }
         if (authorize(x)) {
             x.ustensils.forEach((elt) => {
-                pushOptionsToList('ustensils', elt, dataApp)
+                pushOptionsToList('ustensils', elt)
             })
         }
         if (authorize(x)) {
             if (x.appliance) {
-                pushOptionsToList('appareils', x.appliance, dataApp)
+                pushOptionsToList('appareils', x.appliance)
+            }
+        }
+    })
+
+    dataApp.ingredientsFilter.updateShowBtn(dataApp.ingredients)
+    dataApp.appareilsFilter.updateShowBtn(dataApp.appareils)
+    dataApp.ustensilesFilter.updateShowBtn(dataApp.ustensils)
+}
+
+/**
+ * Mettre la première lettre en majuscule
+ * @param {String} text
+ * @returns String
+ */
+const maj = (text) => text[0].toUpperCase() + text.substring(1)
+
+/**
+ * création des listes d'options pour les boutons de filtre
+ */
+const setListsOptions = () => {
+    dataApp.recettes.forEach((x) => {
+        if (x.showIngredient && x.showSearch) {
+            x.ingredients.forEach((elt) => {
+                pushOptionsToList('ingredients', elt.ingredient)
+            })
+        }
+        if (x.showUstensil && x.showSearch) {
+            x.ustensils.forEach((elt) => {
+                pushOptionsToList('ustensils', elt)
+            })
+        }
+        if (x.showAppareil && x.showSearch) {
+            if (x.appliance) {
+                pushOptionsToList('appareils', x.appliance)
             }
         }
     })
 }
 
+/**
+ * function à importer dans le constructeur
+ * lors de la création d'un bouton de filtre afin de traiter
+ * l'ajout et la suppression de tags
+ * @param {String} type nom du filtre
+ * @param {String} search nom du tag
+ * @param {Boolean} show ajout de tag ou suppression
+ */
+function updateAfterChangeTag(type, search, show) {
+    switch (type) {
+        case 'Ingrédients':
+            changeTags(dataApp.ingredientsSelected, search, show)
+            break
+        case 'Ustensiles':
+            changeTags(dataApp.ustensilsSelected, search, show)
+            break
+        case 'Appareil':
+            changeTags(dataApp.appareilsSelected, search, show)
+            break
+        default:
+            break
+    }
+    updateRecettes()
+    dataApp.ingredients = []
+    dataApp.ustensils = []
+    dataApp.appareils = []
+    updateListsOptions()
+    dataApp.ingredientsFilter.updateShowBtn(dataApp.ingredients)
+    dataApp.appareilsFilter.updateShowBtn(dataApp.appareils)
+    dataApp.ustensilesFilter.updateShowBtn(dataApp.ustensils)
+}
+
+/**
+ * création des boutons de filtre
+ */
+const createFilter = (factFilter, eltFilters) => {
+    dataApp.ingredientsFilter = factFilter.CreateElement(
+        'Ingrédients',
+        dataApp.ingredients,
+        'Recherche un ingrédient',
+        'primary',
+        updateAfterChangeTag
+    )
+    dataApp.appareilsFilter = factFilter.CreateElement(
+        'Appareil',
+        dataApp.appareils,
+        'Recherche un appareil',
+        'success',
+        updateAfterChangeTag
+    )
+    dataApp.ustensilesFilter = factFilter.CreateElement(
+        'Ustensiles',
+        dataApp.ustensils,
+        'Recherche un ustensile',
+        'danger',
+        updateAfterChangeTag
+    )
+    eltFilters.append(dataApp.ingredientsFilter.button)
+    eltFilters.append(dataApp.appareilsFilter.button)
+    eltFilters.append(dataApp.ustensilesFilter.button)
+}
 export {
     showRecettes,
     authorize,
@@ -185,4 +273,8 @@ export {
     changeTags,
     pushOptionsToList,
     updateListsOptions,
+    maj,
+    setListsOptions,
+    updateAfterChangeTag,
+    createFilter,
 }

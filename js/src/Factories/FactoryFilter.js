@@ -2,6 +2,7 @@
 import FilterBtn from '../DomElement/FilterBtn'
 import FilterList from '../DomElement/FilterList'
 import Filters from '../DomElement/Filters'
+import { maj } from '../assets/functions'
 
 const tagsSelect = document.querySelector('.tags')
 export default function FactoryFilter() {
@@ -19,6 +20,8 @@ export default function FactoryFilter() {
             filterElt: filterList,
             listContent: filterList.getElementsByClassName('filter__list')[0],
             input: filterList.getElementsByClassName('filter__input')[0],
+            beforeSearch: [],
+            prevSearch: '',
         }
 
         /**
@@ -43,7 +46,7 @@ export default function FactoryFilter() {
         element.addTag = (index) => {
             const tagBtn = document.createElement('button')
             tagBtn.setAttribute('data-type', name)
-            tagBtn.textContent = element.tags[index].name
+            tagBtn.textContent = maj(element.tags[index].name)
             tagBtn.classList.add('btn', `btn-${color}`)
             const tagIcon = document.createElement('span')
             tagIcon.classList.add('far', 'fa-times-circle')
@@ -62,7 +65,8 @@ export default function FactoryFilter() {
         }
 
         /**
-         * Fonction Ouvre le formulaire
+         * Verifie si je click à l'exterieur du formulaire
+         * et le ferme si c'est le cas
          */
         const verifIfClose = (e) => {
             e.preventDefault()
@@ -82,7 +86,9 @@ export default function FactoryFilter() {
                 element.button.classList.add('hidden')
             }
         }
-
+        /**
+         * Fonction Ouvre le formulaire
+         */
         element.open = () => {
             element.button.after(element.filterElt)
             document.addEventListener('click', verifIfClose)
@@ -112,17 +118,18 @@ export default function FactoryFilter() {
             })
         }
 
+        /**
+         * update la list des tags à sélectionner
+         * @param {Array} list
+         */
         element.updateShowBtn = (list) => {
-            // console.log(name, 'updateShowBtn')
             element.tags.forEach((tag) => {
-                // console.log(tag.name, list)
                 if (list.indexOf(tag.name) === -1) {
                     tag.show = false
                 } else {
                     tag.show = true
                 }
             })
-
             element.showTags()
         }
 
@@ -135,20 +142,37 @@ export default function FactoryFilter() {
             element.button.style.display = 'none'
             element.showTags()
             element.open()
+            element.input.focus()
         }
 
         // Recherche dans l'input
         element.input.oninput = (e) => {
-            element.tags.forEach((x) => {
-                if (
-                    x.name.toLowerCase().includes(e.target.value.toLowerCase())
-                ) {
-                    x.show = true
-                } else {
-                    x.show = false
+            const { value } = e.target
+            // Si c'est le premier caractère de la recherche
+            // on sauvegarde les anciens tags
+            if (value.length === 1 && element.prevSearch.length < 1) {
+                element.beforeSearch = element.tags.map((a) => ({ ...a }))
+            }
+            // On recherche les index des tags ne correspondant pas à la recherche
+            const findIDs = []
+            element.beforeSearch.forEach((x, i) => {
+                if (!x.name.toLowerCase().includes(value.toLowerCase())) {
+                    findIDs.push(i)
                 }
             })
+
+            // si la on supprime un caractère on réinitialise les données avec beforeSearch
+            if (value.length < element.prevSearch.length) {
+                element.tags = element.beforeSearch.map((a) => ({ ...a }))
+            }
+            // on masque tous les tags ne tag ne correspondat pas à la recherche
+            findIDs.forEach((x) => {
+                element.tags[x].show = false
+            })
             element.showTags()
+
+            // on sauvegarde la valeur
+            element.prevSearch = value
         }
 
         return element

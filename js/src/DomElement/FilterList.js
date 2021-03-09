@@ -18,7 +18,7 @@ export default function FilterList(label, color = 'primary') {
     filterIcon.append(span)
     input.after(span)
 
-    const filterList = document.createElement('div')
+    const filterList = document.createElement('ul')
     filterList.classList.add('filter__list', `bg-${color}`)
     listContent.append(filterList)
 

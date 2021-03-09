@@ -4,10 +4,10 @@ export default function FactoryRecette() {
     this.CreateElement = (recette) => {
         const element = {
             ...recette,
-            appareilShow: true,
-            ingredientShow: true,
-            ustensileShow: true,
-            searchShow: true,
+            showAppareil: true,
+            showIngredient: true,
+            showUstensil: true,
+            showSearch: true,
         }
 
         element.html = new Card(recette)
