@@ -82,8 +82,12 @@ const verifAppareils = () => {
  */
 const verifSearch = () => {
     const { recettes, search, recettesForSearch } = dataApp
+    let newSearch = search
+    if (search.length < 3) {
+        newSearch = ''
+    }
     recettesForSearch.forEach((rec, i) => {
-        recettes[i].showSearch = rec.includes(search.toLocaleLowerCase())
+        recettes[i].showSearch = rec.includes(newSearch.toLocaleLowerCase())
     })
 }
 
