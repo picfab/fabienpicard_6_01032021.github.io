@@ -81,25 +81,9 @@ const verifAppareils = () => {
  * Vérifie les recettes à afficher en fonction du champ recherche
  */
 const verifSearch = () => {
-    const { recettes, search } = dataApp
-    recettes.forEach((rec, i) => {
-        let verif = false
-        if (rec.name.toLowerCase().includes(search)) {
-            verif = true
-        }
-        if (rec.description.toLowerCase().includes(search)) {
-            verif = true
-        }
-        rec.ingredients.forEach((ing) => {
-            if (
-                ing.ingredient
-                    .toLowerCase()
-                    .includes(dataApp.search.toLowerCase())
-            ) {
-                verif = true
-            }
-        })
-        recettes[i].showSearch = verif
+    const { recettes, search, recettesForSearch } = dataApp
+    recettesForSearch.forEach((rec, i) => {
+        recettes[i].showSearch = rec.includes(search.toLocaleLowerCase())
     })
 }
 

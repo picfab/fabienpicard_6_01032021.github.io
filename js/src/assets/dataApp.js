@@ -3,6 +3,7 @@ const dataApp = {
     ustensils: [],
     appareils: [],
     recettes: [],
+    recettesForSearch: [],
     ingredientsSelected: [],
     ustensilsSelected: [],
     appareilsSelected: [],
