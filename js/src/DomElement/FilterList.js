@@ -1,6 +1,12 @@
 export default function FilterList(label, color = 'primary') {
     const listContent = document.createElement('div')
-    listContent.classList.add('filter', `bg-${color}`, 'text-white')
+    listContent.classList.add(
+        'filter',
+        `bg-${color}`,
+        'text-white',
+        'col-12',
+        'col-sm-8'
+    )
 
     const filterForm = document.createElement('div')
     filterForm.classList.add('filter__form')
