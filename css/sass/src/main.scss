@@ -82,7 +82,6 @@
     position: relative;
     border-radius: 5px;
     padding: 5px;
-    max-width: 100vw;
     margin-right: 10px;
     margin-bottom: 10px;
     span{
@@ -90,7 +89,6 @@
     }
     &__form {
         display: flex;
-        width: 667px;
     }
     &__input{
         flex:1;
