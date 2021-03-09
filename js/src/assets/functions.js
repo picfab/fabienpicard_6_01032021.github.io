@@ -48,7 +48,11 @@ const verifIngredients = () => {
     recettes.forEach((rec, i) => {
         let verif = true
         ingredientsSelected.forEach((val) => {
-            if (rec.ingredients.findIndex((x) => x.ingredient === val) === -1) {
+            if (
+                rec.ingredients.findIndex(
+                    (x) => x.ingredient.toLowerCase() === val
+                ) === -1
+            ) {
                 verif = false
             }
         })
@@ -64,7 +68,9 @@ const verifUnstensils = () => {
     recettes.forEach((rec, i) => {
         let verif = true
         ustensilsSelected.forEach((val) => {
-            if (rec.ustensils.findIndex((x) => x === val) === -1) {
+            if (
+                rec.ustensils.findIndex((x) => x.toLowerCase() === val) === -1
+            ) {
                 verif = false
             }
         })
@@ -80,7 +86,7 @@ const verifAppareils = () => {
     recettes.forEach((rec, i) => {
         let verif = true
         appareilsSelected.forEach((val) => {
-            if (val !== rec.appliance) {
+            if (val !== rec.appliance.toLowerCase()) {
                 verif = false
             }
         })
@@ -135,14 +141,15 @@ const changeTags = (selected, tagName, show) => {
  */
 const pushOptionsToList = (type, val) => {
     const selectedName = `${type}Selected`
+    const newVal = val.toLowerCase()
     if (
         // S'il n'est pas déjà inclus dans la liste
-        !dataApp[type].includes(val) &&
+        !dataApp[type].includes(newVal) &&
         // et s'il n'est pas dans la liste des tags sélectionné
-        dataApp[selectedName].findIndex((x) => x === val) === -1
+        dataApp[selectedName].findIndex((x) => x === newVal) === -1
         // alors je l'ajoute
     ) {
-        dataApp[type].push(val)
+        dataApp[type].push(newVal)
     }
 }
 
@@ -231,9 +238,6 @@ function updateAfterChangeTag(type, search, show) {
     dataApp.ustensils = []
     dataApp.appareils = []
     updateListsOptions()
-    // dataApp.ingredientsFilter.updateShowBtn(dataApp.ingredients)
-    // dataApp.appareilsFilter.updateShowBtn(dataApp.appareils)
-    // dataApp.ustensilesFilter.updateShowBtn(dataApp.ustensils)
 }
 
 /**
@@ -242,21 +246,21 @@ function updateAfterChangeTag(type, search, show) {
 const createFilter = (factFilter, eltFilters) => {
     dataApp.ingredientsFilter = factFilter.CreateElement(
         'Ingrédients',
-        dataApp.ingredients,
+        dataApp.ingredients.sort(),
         'Recherche un ingrédient',
         'primary',
         updateAfterChangeTag
     )
     dataApp.appareilsFilter = factFilter.CreateElement(
         'Appareil',
-        dataApp.appareils,
+        dataApp.appareils.sort(),
         'Recherche un appareil',
         'success',
         updateAfterChangeTag
     )
     dataApp.ustensilesFilter = factFilter.CreateElement(
         'Ustensiles',
-        dataApp.ustensils,
+        dataApp.ustensils.sort(),
         'Recherche un ustensile',
         'danger',
         updateAfterChangeTag
@@ -265,6 +269,7 @@ const createFilter = (factFilter, eltFilters) => {
     eltFilters.append(dataApp.appareilsFilter.button)
     eltFilters.append(dataApp.ustensilesFilter.button)
 }
+
 export {
     showRecettes,
     authorize,
