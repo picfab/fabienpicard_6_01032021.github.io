@@ -90,6 +90,7 @@
     &__form {
         display: flex;
     }
+
     &__input{
         flex:1;
         border: none;
@@ -126,6 +127,9 @@
         margin-left: -5px;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
+        &:empty {
+            padding: 0;
+        }
     }
     &__elt{
         width: calc(100%/3);

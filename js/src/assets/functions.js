@@ -20,13 +20,24 @@ const authorize = ({
  * Affiche les recettes dans le Dom
  */
 const showRecettes = () => {
+    const { recettes } = dataApp
     const content = document.querySelector('.listcards')
     content.innerHTML = ''
-    dataApp.recettes.forEach((x) => {
+    let valid = false
+    recettes.forEach((x) => {
         if (authorize(x)) {
+            valid = true
             content.append(x.html)
         }
     })
+    if (valid === false) {
+        const message = document.createElement('div')
+        message.classList.add('alert', 'alert-warning')
+        message.role = 'alert'
+        message.textContent =
+            'Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.'
+        content.append(message)
+    }
 }
 
 /**
@@ -220,9 +231,9 @@ function updateAfterChangeTag(type, search, show) {
     dataApp.ustensils = []
     dataApp.appareils = []
     updateListsOptions()
-    dataApp.ingredientsFilter.updateShowBtn(dataApp.ingredients)
-    dataApp.appareilsFilter.updateShowBtn(dataApp.appareils)
-    dataApp.ustensilesFilter.updateShowBtn(dataApp.ustensils)
+    // dataApp.ingredientsFilter.updateShowBtn(dataApp.ingredients)
+    // dataApp.appareilsFilter.updateShowBtn(dataApp.appareils)
+    // dataApp.ustensilesFilter.updateShowBtn(dataApp.ustensils)
 }
 
 /**

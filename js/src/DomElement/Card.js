@@ -20,7 +20,7 @@ export default function Card(recette) {
 
     const img = document.createElement('img')
     img.src = `./img/${recette.id}.jpg`
-    imgBox.append(img)
+    // imgBox.append(img)
 
     const container = document.createElement('div')
     container.classList.add('card-body', 'container')

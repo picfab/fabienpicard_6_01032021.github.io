@@ -112,6 +112,7 @@ export default function FactoryFilter() {
                     x.element.onclick = (e) => {
                         e.stopPropagation()
                         element.addTag(i)
+                        element.input.value = ''
                     }
                     element.listContent.append(x.element)
                 }
@@ -148,31 +149,19 @@ export default function FactoryFilter() {
         // Recherche dans l'input
         element.input.oninput = (e) => {
             const { value } = e.target
-            // Si c'est le premier caractère de la recherche
-            // on sauvegarde les anciens tags
-            if (value.length === 1 && element.prevSearch.length < 1) {
-                element.beforeSearch = element.tags.map((a) => ({ ...a }))
-            }
+            element.beforeSearch = element.tags.map((a) => ({ ...a }))
             // On recherche les index des tags ne correspondant pas à la recherche
             const findIDs = []
-            element.beforeSearch.forEach((x, i) => {
+            element.tags.forEach((x, i) => {
                 if (!x.name.toLowerCase().includes(value.toLowerCase())) {
                     findIDs.push(i)
+                    x.show = false
                 }
-            })
-
-            // si la on supprime un caractère on réinitialise les données avec beforeSearch
-            if (value.length < element.prevSearch.length) {
-                element.tags = element.beforeSearch.map((a) => ({ ...a }))
-            }
-            // on masque tous les tags ne tag ne correspondat pas à la recherche
-            findIDs.forEach((x) => {
-                element.tags[x].show = false
             })
             element.showTags()
 
-            // on sauvegarde la valeur
-            element.prevSearch = value
+            // on reinitialise les valeurs d'origine
+            element.tags = element.beforeSearch.map((a) => ({ ...a }))
         }
 
         return element
