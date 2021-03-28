@@ -270,6 +270,19 @@ const createFilter = (factFilter, eltFilters) => {
     eltFilters.append(dataApp.ustensilesFilter.button)
 }
 
+/**
+ * Création du tableau de recettes pour la recette
+ */
+const setRecetteForSearch = (recette, data) => {
+    let ingredientsString = ''
+    recette.ingredients.forEach((ing, i) => {
+        const next = recette.ingredients.length > i ? ' ' : ''
+        ingredientsString += `${ing.ingredient} ${next}`
+    })
+    data.recettesForSearch.push(
+        `${recette.name.toLowerCase()} ${recette.description.toLowerCase()} ${ingredientsString.toLowerCase()}`
+    )
+}
 export {
     showRecettes,
     authorize,
@@ -281,4 +294,5 @@ export {
     setListsOptions,
     updateAfterChangeTag,
     createFilter,
+    setRecetteForSearch
 }

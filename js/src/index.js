@@ -15,6 +15,7 @@ import {
     updateListsOptions,
     setListsOptions,
     createFilter,
+    setRecetteForSearch
 } from './assets/functions'
 /**
  * importation des factory
@@ -56,14 +57,7 @@ searchInput.oninput = (e) => {
  */
 recipes.forEach((x) => {
     dataApp.recettes.push(factRecette.CreateElement(x))
-    let ingredientsString = ''
-    x.ingredients.forEach((ing, i) => {
-        const next = x.ingredients.length > i ? ' ' : ''
-        ingredientsString += `${ing.ingredient} ${next}`
-    })
-    dataApp.recettesForSearch.push(
-        `${x.name.toLowerCase()} ${x.name.toLowerCase()} ${ingredientsString.toLowerCase()}`
-    )
+    setRecetteForSearch(x, dataApp)
 })
 
 /**

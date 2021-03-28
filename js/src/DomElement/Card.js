@@ -27,7 +27,7 @@ export default function Card(recette) {
     card.append(container)
 
     const row = document.createElement('div')
-    row.classList.add('row')
+    row.classList.add('row', 'p-3')
     container.append(row)
 
     const cardTitle = document.createElement('div')

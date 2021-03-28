@@ -3,20 +3,24 @@ const search = 'sucre'
 
 const verifSearch = () => {
     recettes.forEach((rec, i) => {
+        const newSearch = search.toLowerCase()
         let verif = false
-        if (rec.name.toLowerCase().includes(search)) {
+        if (rec.name.toLowerCase().includes(newSearch)) {
             verif = true
         }
-        if (rec.description.toLowerCase().includes(search)) {
-            verif = true
-        }
-        rec.ingredients.forEach((ing) => {
-            if (ing.ingredient.toLowerCase().includes(search.toLowerCase())) {
+        if (!verif) {
+            if (rec.description.toLowerCase().includes(newSearch)) {
                 verif = true
             }
-        })
+        }
+        if (!verif) {
+            rec.ingredients.forEach((ing) => {
+                if (ing.ingredient.toLowerCase().includes(newSearch)) {
+                    verif = true
+                }
+            })
+        }
         recettes[i].showSearch = verif
     })
 }
 verifSearch()
-
